@@ -1,1 +1,285 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>US Citizenship Test Prep</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--navy:#1a2e4a;--blue:#1d4ed8;--lb:#3b82f6;--red:#dc2626;--green:#16a34a;--gold:#f59e0b;--bg:#f0f4f8;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+.header{background:linear-gradient(135deg,var(--navy) 0%,#2d4a7a 100%);color:#fff;padding:18px 16px 14px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.header-flag{font-size:26px;margin-bottom:3px}
+.header h1{font-size:17px;font-weight:700}
+.header p{font-size:11px;opacity:.8;margin-top:2px}
+.nav-tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:78px;z-index:99}
+.nav-tab{flex:1;padding:11px 4px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-icon{font-size:15px;display:block;margin-bottom:2px}
+.screen{display:none;padding:14px;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.home-hero{background:linear-gradient(135deg,var(--navy),#2d4a7a);color:#fff;border-radius:16px;padding:22px;margin-bottom:14px;text-align:center}
+.home-hero h2{font-size:19px;font-weight:700;margin-bottom:7px}
+.home-hero p{font-size:13px;opacity:.85;line-height:1.5}
+.countdown-box{background:rgba(255,255,255,.15);border-radius:10px;padding:11px;margin-top:13px}
+.countdown-box .days{font-size:38px;font-weight:800;color:var(--gold)}
+.countdown-box .lbl{font-size:11px;opacity:.9}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.stat-card{background:#fff;border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.stat-card .val{font-size:26px;font-weight:800;color:var(--blue)}
+.stat-card .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.mode-cards{display:flex;flex-direction:column;gap:9px}
+.mode-card{background:#fff;border-radius:13px;padding:16px;display:flex;align-items:center;gap:13px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.06);border:2px solid transparent;transition:all .2s}
+.mode-card:active{transform:scale(.98)}
+.mode-card.primary{border-color:var(--blue);background:#eff6ff}
+.mode-icon{font-size:30px;flex-shrink:0}
+.mode-info h3{font-size:14px;font-weight:700}
+.mode-info p{font-size:11px;color:var(--muted);margin-top:2px}
+.mode-arrow{margin-left:auto;color:var(--muted);font-size:18px}
+.quiz-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.quiz-back{background:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.quiz-prog-txt{font-size:12px;color:var(--muted);font-weight:600}
+.progress-bar{height:6px;background:var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--lb),var(--blue));border-radius:10px;transition:width .4s ease}
+.question-card{background:#fff;border-radius:15px;padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.q-cat{display:inline-block;background:#eff6ff;color:var(--blue);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:9px;text-transform:uppercase;letter-spacing:.5px}
+.q-num{font-size:11px;color:var(--muted);margin-bottom:5px}
+.q-text{font-size:15px;font-weight:600;line-height:1.5}
+.options-list{display:flex;flex-direction:column;gap:9px}
+.opt-btn{background:#fff;border:2px solid var(--border);border-radius:11px;padding:13px 15px;text-align:left;font-size:13px;cursor:pointer;transition:all .2s;line-height:1.4;font-family:inherit;color:var(--text);width:100%}
+.opt-btn.correct{border-color:var(--green);background:#f0fdf4;color:var(--green)}
+.opt-btn.wrong{border-color:var(--red);background:#fef2f2;color:var(--red)}
+.opt-btn.reveal{border-color:var(--green);background:#f0fdf4}
+.opt-btn:disabled{cursor:default}
+.feedback{border-radius:11px;padding:13px 15px;margin-top:12px;font-size:13px;line-height:1.5;display:none}
+.feedback.correct{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}
+.feedback.wrong{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.fb-title{font-weight:700;font-size:14px;margin-bottom:3px}
+.next-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--lb));color:#fff;border:none;border-radius:11px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;font-family:inherit}
+.results-card{background:#fff;border-radius:18px;padding:26px 18px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08);margin-bottom:14px}
+.res-emoji{font-size:60px;margin-bottom:11px}
+.res-score{font-size:50px;font-weight:800;margin-bottom:4px}
+.res-score.pass{color:var(--green)}
+.res-score.fail{color:var(--red)}
+.res-label{font-size:19px;font-weight:700;margin-bottom:7px}
+.res-sub{font-size:13px;color:var(--muted);line-height:1.5}
+.res-bar-wrap{margin:18px 0 6px}
+.res-bar{height:11px;background:var(--border);border-radius:10px;overflow:hidden}
+.res-bar-fill{height:100%;border-radius:10px;transition:width 1s ease}
+.res-bar-fill.pass{background:linear-gradient(90deg,#16a34a,#22c55e)}
+.res-bar-fill.fail{background:linear-gradient(90deg,#dc2626,#f87171)}
+.res-actions{display:flex;flex-direction:column;gap:9px}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--lb));color:#fff;border:none;border-radius:11px;padding:15px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+.btn-secondary{background:#fff;color:var(--blue);border:2px solid var(--blue);border-radius:11px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+.topic-filter{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:7px;margin-bottom:12px}
+.topic-filter::-webkit-scrollbar{display:none}
+.topic-chip{flex-shrink:0;padding:6px 13px;border-radius:20px;background:#fff;border:2px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;color:var(--muted)}
+.topic-chip.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.fc-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.fc-nav-btn{background:#fff;border:2px solid var(--border);border-radius:9px;padding:9px 16px;font-size:17px;cursor:pointer}
+.fc-counter{font-size:13px;font-weight:600;color:var(--muted)}
+.flashcard{background:#fff;border-radius:15px;padding:26px 18px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;border:2px solid var(--border)}
+.fc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:11px;color:var(--blue)}
+.fc-text{font-size:16px;font-weight:600;line-height:1.5}
+.fc-tap{font-size:11px;color:var(--muted);margin-top:13px}
+.fc-answer{font-size:13px;color:var(--green);font-weight:600;line-height:1.6;display:none;margin-top:11px}
+.flashcard.revealed .fc-tap{display:none}
+.flashcard.revealed .fc-answer{display:block}
+.flashcard.revealed{border-color:var(--green)}
+.prog-section{margin-bottom:18px}
+.prog-section h3{font-size:14px;font-weight:700;margin-bottom:11px;color:var(--navy)}
+.tp-item{background:#fff;border-radius:11px;padding:13px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.tp-hdr{display:flex;justify-content:space-between;margin-bottom:7px}
+.tp-name{font-size:12px;font-weight:600}
+.tp-pct{font-size:12px;font-weight:700;color:var(--blue)}
+.tp-bar{height:7px;background:var(--border);border-radius:10px;overflow:hidden}
+.tp-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--lb),var(--blue))}
+.hist-item{background:#fff;border-radius:11px;padding:13px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:11px}
+.hist-score{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0}
+.hist-score.pass{background:#f0fdf4;color:var(--green)}
+.hist-score.fail{background:#fef2f2;color:var(--red)}
+.hi-mode{font-size:12px;font-weight:600}
+.hi-date{font-size:10px;color:var(--muted);margin-top:2px}
+.hist-badge{margin-left:auto;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.hist-badge.pass{background:#f0fdf4;color:var(--green)}
+.hist-badge.fail{background:#fef2f2;color:var(--red)}
+.empty-state{text-align:center;padding:35px 18px;color:var(--muted)}
+.empty-state .es-icon{font-size:44px;margin-bottom:11px}
+.empty-state p{font-size:13px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-sheet{background:#fff;border-radius:22px 22px 0 0;padding:22px 18px 38px;width:100%;max-width:480px;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:38px;height:4px;background:var(--border);border-radius:10px;margin:0 auto 18px}
+.modal-title{font-size:17px;font-weight:800;margin-bottom:5px;color:var(--navy)}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.modal-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.modal-opt{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border:2px solid var(--border);border-radius:11px;cursor:pointer}
+.modal-opt.selected{border-color:var(--blue);background:#eff6ff}
+.modal-opt-info h4{font-size:13px;font-weight:700}
+.modal-opt-info p{font-size:11px;color:var(--muted);margin-top:2px}
+.modal-opt-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0}
+.modal-opt.selected .modal-opt-check{background:var(--blue);border-color:var(--blue)}
+.sec-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px}
+select{width:100%;padding:11px;border-radius:9px;border:2px solid var(--border);font-size:13px;margin-bottom:15px;font-family:inherit;background:#fff}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(18px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-flag">🇺🇸</div>
+  <h1>US Citizenship Test Prep</h1>
+  <p>2025 Format · 128 Official USCIS Questions</p>
+</div>
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="showScreen('home')" id="tab-home"><span class="tab-icon">🏠</span>Home</div>
+  <div class="nav-tab" onclick="showScreen('quiz')" id="tab-quiz"><span class="tab-icon">📝</span>Quiz</div>
+  <div class="nav-tab" onclick="showScreen('study')" id="tab-study"><span class="tab-icon">📖</span>Study</div>
+  <div class="nav-tab" onclick="showScreen('progress')" id="tab-progress"><span class="tab-icon">📊</span>Progress</div>
+</div>
+<div class="screen active" id="screen-home">
+  <div class="home-hero">
+    <h2>You've Got This, Gaurav! 🎯</h2>
+    <p>Stay consistent and you'll be ready for your interview!</p>
+    <div class="countdown-box">
+      <div class="days" id="countdown-days">183</div>
+      <div class="lbl">days to go (estimated ~6 months)</div>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="val" id="h-answered">0</div><div class="lbl">Questions Answered</div></div>
+    <div class="stat-card"><div class="val" id="h-tests">0</div><div class="lbl">Tests Completed</div></div>
+    <div class="stat-card"><div class="val" id="h-best">—</div><div class="lbl">Best Score</div></div>
+    <div class="stat-card"><div class="val" id="h-acc">—</div><div class="lbl">Overall Accuracy</div></div>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card primary" onclick="openModal('practice')"><div class="mode-icon">⚡</div><div class="mode-info"><h3>Practice Test</h3><p>20 random questions · Need 12/20 to pass</p></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card" onclick="openModal('topic')"><div class="mode-icon">🎯</div><div class="mode-info"><h3>Quiz by Topic</h3><p>Focus on a specific category</p></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card" onclick="showScreen('study')"><div class="mode-icon">📖</div><div class="mode-info"><h3>Flashcards</h3><p>Browse all 128 questions & answers</p></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card" onclick="openModal('weak')"><div class="mode-icon">💪</div><div class="mode-info"><h3>Weak Areas</h3><p>Drill questions you've missed</p></div><div class="mode-arrow">›</div></div>
+  </div>
+</div>
+<div class="screen" id="screen-quiz">
+  <div id="quiz-wrap">
+    <div class="quiz-hdr">
+      <button class="quiz-back" onclick="exitQuiz()">← Back</button>
+      <div class="quiz-prog-txt" id="qpt">Question 1 of 20</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="qpf" style="width:5%"></div></div>
+    <div class="question-card">
+      <div class="q-num" id="qnum">Q1</div>
+      <div class="q-cat" id="qcat">American Government</div>
+      <div class="q-text" id="qtext">Loading...</div>
+    </div>
+    <div class="options-list" id="opts"></div>
+    <div class="feedback" id="fb"><div class="fb-title" id="fbt"></div><div id="fbb"></div></div>
+    <button class="next-btn" id="nxt" onclick="nextQ()">Next Question →</button>
+  </div>
+  <div id="res-wrap" style="display:none">
+    <div class="results-card">
+      <div class="res-emoji" id="re">🎉</div>
+      <div class="res-score" id="rs">15/20</div>
+      <div class="res-label" id="rl">PASSED!</div>
+      <div class="res-sub" id="rsub"></div>
+      <div class="res-bar-wrap"><div class="res-bar"><div class="res-bar-fill" id="rbf" style="width:0%"></div></div></div>
+    </div>
+    <div class="res-actions">
+      <button class="btn-primary" onclick="openModal('practice')">Try Again ⚡</button>
+      <button class="btn-secondary" onclick="reviewMissed()">Review Missed Questions</button>
+      <button class="btn-secondary" onclick="showScreen('home')">Back to Home</button>
+    </div>
+  </div>
+</div>
+<div class="screen" id="screen-study">
+  <div class="topic-filter" id="study-filter"></div>
+  <div class="fc-nav">
+    <button class="fc-nav-btn" onclick="prevCard​​​​​​​​​​​​​​​​
+<script>
+const Q=[
+{id:1,cat:"Principles of Democracy",q:"What is the supreme law of the land?",a:"The Constitution",o:["The Declaration of Independence","The Constitution","The Bill of Rights","Federal law"]},
+{id:2,cat:"Principles of Democracy",q:"What does the Constitution do?",a:"Sets up the government, defines the government, and protects basic rights of Americans",o:["Declares independence from Britain","Sets up the government, defines the government, and protects basic rights of Americans","Lists the rights of states only","Establishes the military"]},
+{id:3,cat:"Principles of Democracy",q:"The idea of self-government is in the first three words of the Constitution. What are these words?",a:"We the People",o:["We the People","In Order To","We the Citizens","United We Stand"]},
+{id:4,cat:"Principles of Democracy",q:"What is an amendment?",a:"A change or addition to the Constitution",o:["A new law passed by Congress","A Presidential executive order","A change or addition to the Constitution","A Supreme Court ruling"]},
+{id:5,cat:"Principles of Democracy",q:"What do we call the first ten amendments to the Constitution?",a:"The Bill of Rights",o:["The Declaration of Rights","The Bill of Rights","The Articles of Freedom","The Founding Principles"]},
+{id:6,cat:"Principles of Democracy",q:"What is one right or freedom from the First Amendment?",a:"Freedom of speech, religion, assembly, press, or petition the government",o:["Right to bear arms","Freedom of speech, religion, assembly, press, or petition the government","Right to a fair trial","Right to vote"]},
+{id:7,cat:"Principles of Democracy",q:"How many amendments does the Constitution have?",a:"Twenty-seven (27)",o:["Ten (10)","Twenty-five (25)","Twenty-seven (27)","Thirty (30)"]},
+{id:8,cat:"Principles of Democracy",q:"What did the Declaration of Independence do?",a:"Declared our independence from Great Britain",o:["Created the Constitution","Abolished slavery","Declared our independence from Great Britain","Established Congress"]},
+{id:9,cat:"Principles of Democracy",q:"What are two rights in the Declaration of Independence?",a:"Life, liberty, and the pursuit of happiness",o:["Life and liberty only","Life, liberty, and the pursuit of happiness","Freedom and equality","Justice and peace"]},
+{id:10,cat:"Principles of Democracy",q:"What is freedom of religion?",a:"You can practice any religion, or not practice a religion",o:["The government endorses one religion","You can practice any religion, or not practice a religion","All citizens must practice a religion","Religion is controlled by states"]},
+{id:11,cat:"System of Government",q:"What is the economic system in the United States?",a:"Capitalist economy / Market economy",o:["Socialist economy","Communist economy","Capitalist / market economy","Centrally planned economy"]},
+{id:12,cat:"System of Government",q:"What is the rule of law?",a:"No one is above the law — everyone must follow the law",o:["Only citizens must follow the law","No one is above the law — everyone must follow the law","Judges make all the laws","The President can override laws"]},
+{id:13,cat:"System of Government",q:"Name one branch or part of the government.",a:"Congress (legislative), President (executive), or the courts (judicial)",o:["The military","Congress (legislative), President (executive), or the courts (judicial)","The FBI","The Cabinet"]},
+{id:14,cat:"System of Government",q:"What stops one branch of government from becoming too powerful?",a:"Checks and balances / Separation of powers",o:["The military","Checks and balances / Separation of powers","The Supreme Court alone","Public elections"]},
+{id:15,cat:"System of Government",q:"Who is in charge of the executive branch?",a:"The President",o:["The Speaker of the House","The Chief Justice","The President","The Senate Majority Leader"]},
+{id:16,cat:"System of Government",q:"Who makes federal laws?",a:"Congress / Senate and House of Representatives",o:["The President","The Supreme Court","Congress / Senate and House of Representatives","The states"]},
+{id:17,cat:"System of Government",q:"What are the two parts of the U.S. Congress?",a:"The Senate and House of Representatives",o:["The House and the Cabinet","The Senate and House of Representatives","The Congress and the Courts","The Upper and Lower Presidency"]},
+{id:18,cat:"System of Government",q:"How many U.S. Senators are there?",a:"One hundred (100)",o:["50","100","435","535"]},
+{id:19,cat:"System of Government",q:"We elect a U.S. Senator for how many years?",a:"Six (6) years",o:["2 years","4 years","6 years","8 years"]},
+{id:20,cat:"System of Government",q:"Who is one of your state's U.S. Senators now?",a:"Answers will vary — visit senate.gov for your state's current senators",o:["Answers vary by state — visit senate.gov","A state governor","A state judge","A city mayor"]},
+{id:21,cat:"System of Government",q:"The House of Representatives has how many voting members?",a:"Four hundred thirty-five (435)",o:["100","200","435","535"]},
+{id:22,cat:"System of Government",q:"We elect a U.S. Representative for how many years?",a:"Two (2) years",o:["2 years","4 years","6 years","8 years"]},
+{id:23,cat:"System of Government",q:"Name your U.S. Representative.",a:"Answers will vary — visit house.gov to find your representative",o:["Answers vary by district — visit house.gov","The President","Your state governor","The Vice President"]},
+{id:24,cat:"System of Government",q:"Who does a U.S. Senator represent?",a:"All people of the state",o:["Only voters in their party","All people of the state","Only taxpayers","Their campaign donors"]},
+{id:25,cat:"System of Government",q:"Why do some states have more Representatives than other states?",a:"Because of the state's population",o:["Because of geographic size","Because of population size","Because of economic output","Because of tax revenue"]},
+{id:26,cat:"System of Government",q:"We elect a President for how many years?",a:"Four (4) years",o:["2 years","4 years","6 years","8 years"]},
+{id:27,cat:"System of Government",q:"In what month do we vote for President?",a:"November",o:["September","October","November","December"]},
+{id:28,cat:"System of Government",q:"What is the name of the President of the United States now?",a:"Donald J. Trump",o:["Joe Biden","Donald J. Trump","Barack Obama","George W. Bush"]},
+{id:29,cat:"System of Government",q:"What is the name of the Vice President of the United States now?",a:"JD Vance",o:["Kamala Harris","Mike Pence","JD Vance","Tim Walz"]},
+{id:30,cat:"System of Government",q:"If the President can no longer serve, who becomes President?",a:"The Vice President",o:["The Speaker of the House","The Secretary of State","The Vice President","The Chief Justice"]},
+{id:31,cat:"System of Government",q:"If both the President and the Vice President can no longer serve, who becomes President?",a:"The Speaker of the House",o:["The Secretary of State","The Senate Majority Leader","The Speaker of the House","The Chief Justice"]},
+{id:32,cat:"System of Government",q:"Who is the Commander in Chief of the military?",a:"The President",o:["The Secretary of Defense","The Joint Chiefs of Staff","The President","The Vice President"]},
+{id:33,cat:"System of Government",q:"Who signs bills to become laws?",a:"The President",o:["The Vice President","The Speaker of the House","The President","The Chief Justice"]},
+{id:34,cat:"System of Government",q:"Who vetoes bills?",a:"The President",o:["The Senate","The Supreme Court","The President","The House Speaker"]},
+{id:35,cat:"System of Government",q:"What does the President's Cabinet do?",a:"Advises the President",o:["Makes laws","Commands the military","Advises the President","Confirms judges"]},
+{id:36,cat:"System of Government",q:"What are two Cabinet-level positions?",a:"Secretary of State and Secretary of Defense (among others)",o:["Secretary of State and Secretary of Defense","Secretary of War and Navy","Director of CIA and NSA","Chief Justice and Speaker of the House"]},
+{id:37,cat:"System of Government",q:"What does the judicial branch do?",a:"Reviews laws, explains laws, resolves disputes, decides if a law goes against the Constitution",o:["Makes laws","Enforces laws","Reviews and interprets laws / decides constitutionality","Commands the military"]},
+{id:38,cat:"System of Government",q:"What is the highest court in the United States?",a:"The Supreme Court",o:["The Court of Appeals","The District Court","The Supreme Court","The Constitutional Court"]},
+{id:39,cat:"System of Government",q:"How many justices are on the Supreme Court?",a:"Nine (9)",o:["7","8","9","12"]},
+{id:40,cat:"System of Government",q:"Who is the Chief Justice of the United States now?",a:"John Roberts (John G. Roberts, Jr.)",o:["Sonia Sotomayor","Elena Kagan","John Roberts","Clarence Thomas"]},
+{id:41,cat:"System of Government",q:"What is one power of the federal government?",a:"To print money, declare war, create an army, or make treaties",o:["Issue driver's licenses","Print money / declare war / make treaties","Establish local schools","Set speed limits"]},
+{id:42,cat:"System of Government",q:"What is one power of the states?",a:"Provide schooling, protection (police), driver's licenses, or approve zoning",o:["Declare war","Print money","Issue driver's licenses / run schools / provide police","Make treaties with foreign countries"]},
+{id:43,cat:"System of Government",q:"Who is the Governor of your state now?",a:"Answers will vary — visit usa.gov/states-and-territories",o:["Answers vary by state — visit usa.gov","The President","Your U.S. Senator","Your U.S. Representative"]},
+{id:44,cat:"System of Government",q:"What is the capital of your state?",a:"Answers will vary — name your state's capital city",o:["Answers vary by state","Washington D.C.","New York City","Los Angeles"]},
+{id:45,cat:"System of Government",q:"What are the two major political parties in the United States?",a:"Democratic and Republican",o:["Liberal and Conservative","Democratic and Republican","Federalist and Anti-Federalist","Whig and Tory"]},
+{id:46,cat:"System of Government",q:"What is the political party of the President now?",a:"Republican (Party)",o:["Democratic","Republican","Independent","Libertarian"]},
+{id:47,cat:"System of Government",q:"What is the name of the Speaker of the House of Representatives now?",a:"Mike Johnson",o:["Nancy Pelosi","Kevin McCarthy","Mike Johnson","Hakeem Jeffries"]},
+{id:48,cat:"Rights and Responsibilities",q:"There are four amendments about who can vote. Describe one of them.",a:"Citizens eighteen (18) and older can vote / No poll tax to vote / Any citizen can vote / A male citizen of any race can vote",o:["Only property owners can vote","Citizens 18 and older can vote / no poll tax / any citizen can vote","Only college graduates can vote","Only those who pay taxes can vote"]},
+{id:49,cat:"Rights and Responsibilities",q:"What is one responsibility that is only for United States citizens?",a:"Serve on a jury / Vote in a federal election",o:["Pay taxes","Obey the law","Vote in a federal election / serve on a jury","Follow traffic laws"]},
+{id:50,cat:"Rights and Responsibilities",q:"Name one right only for United States citizens.",a:"Vote in a federal election / Run for federal office",o:["Freedom of speech","Vote in a federal election / run for federal office","Pay taxes","Drive a car"]},
+{id:51,cat:"Rights and Responsibilities",q:"What are two rights of everyone living in the United States?",a:"Freedom of speech, religion, assembly, press, to petition the government, or right to bear arms",o:["Vote and run for office","Freedom of speech and freedom of religion (among others)","Drive and own property","Work and travel freely"]},
+{id:52,cat:"Rights and Responsibilities",q:"What do we show loyalty to when we say the Pledge of Allegiance?",a:"The United States / The flag",o:["The President","The military","The United States and the flag","The Constitution"]},
+{id:53,cat:"Rights and Responsibilities",q:"What is one promise you make when you become a United States citizen?",a:"Give up loyalty to other countries / Defend the Constitution / Obey U.S. laws / Be loyal to the United States",o:["Pay higher taxes","Give up loyalty to other countries and defend the Constitution","Move to Washington D.C.","Pay a special citizenship fee"]},
+{id:54,cat:"Rights and Responsibilities",q:"How old do citizens have to be to vote for President?",a:"Eighteen (18) and older",o:["16 and older","18 and older","21 and older","25 and older"]},
+{id:55,cat:"Rights and Responsibilities",q:"What are two ways Americans can participate in their democracy?",a:"Vote, join a political party, run for office, contact elected officials, or join civic groups",o:["Pay taxes and own property","Vote and join a political party / contact officials","Work for the government only","Attend church and volunteer"]},
+{id:56,cat:"Rights and Responsibilities",q:"When is the last day you can send in federal income tax forms?",a:"April 15",o:["March 15","April 15","May 1","June 30"]},
+{id:57,cat:"Rights and Responsibilities",q:"When must all men register for the Selective Service?",a:"At age eighteen (18) / Between eighteen (18) and twenty-six (26)",o:["At age 16","At age 18 / between 18 and 26","At age 21","When they graduate college"]},
+{id:58,cat:"Colonial Period & Independence",q:"What is one reason colonists came to America?",a:"Freedom, political liberty, religious freedom, economic opportunity, or to escape persecution",o:["To find gold only","For freedom, religious liberty, and economic opportunity","To conquer native peoples","To establish a monarchy"]},
+{id:59,cat:"Colonial Period & Independence",q:"Who lived in America before the Europeans arrived?",a:"American Indians / Native Americans",o:["Africans","American Indians / Native Americans","Vikings","Spanish explorers"]},
+{id:60,cat:"Colonial Period & Independence",q:"What group of people was taken to America and sold as slaves?",a:"Africans / People from Africa",o:["Irish immigrants","Africans / People from Africa","Chinese workers","Native Americans"]},
+{id:61,cat:"Colonial Period & Independence",q:"Why did the colonists fight the British?",a:"High taxes (taxation without representation), British army quartering, and lack of self-government",o:["To expand territory","High taxes and no self-government (taxation without representation)","To gain independence from France","To establish a monarchy"]},
+{id:62,cat:"Colonial Period & Independence",q:"Who wrote the Declaration of Independence?",a:"Thomas Jefferson",o:["George Washington","Benjamin Franklin","Thomas Jefferson","John Adams"]},
+{id:63,cat:"Colonial Period & Independence",q:"When was the Declaration of Independence adopted?",a:"July 4, 1776",o:["July 4, 1775","July 4, 1776","June 15, 1775","August 2, 1776"]},
+{id:64,cat:"Colonial Period & Independence",q:"There were 13 original states. Name three.",a:"Virginia, Massachusetts, New York (also NH, RI, CT, NJ, PA, DE, MD, NC, SC, GA)",o:["Texas, Florida, California","Virginia, Massachusetts, New York (among the 13 original states)","Ohio, Michigan, Indiana","Louisiana, Mississippi, Alabama"]},
+{id:65,cat:"Colonial Period & Independence",q:"What happened at the Constitutional Convention?",a:"The Constitution was written",o:["The Declaration of Independence was signed","The Constitution was written","The first Congress met","George Washington was inaugurated"]},
+{id:66,cat:"Colonial Period & Independence",q:"When was the Constitution written?",a:"1787",o:["1776","1781","1787","1791"]},
+{id:67,cat:"Colonial Period & Independence",q:"The Federalist Papers supported the U.S. Constitution. Name one of the writers.",a:"James Madison, Alexander Hamilton, or John Jay (also wrote as Publius)",o:["Thomas Jefferson","James Madison / Alexander Hamilton / John Jay","George Washington","John Adams"]},
+{id:68,cat:"Colonial Period & Independence",q:"What is one thing Benjamin Franklin is famous for?",a:"U.S. diplomat, oldest Constitutional Convention member, first Postmaster General, discovered electricity",o:["He was the first President","He wrote the Declaration of Independence","U.S. diplomat, inventor, Postmaster General, discovered electricity","He commanded the Continental Army"]},
+{id:69,cat:"Colonial Period & Independence",q:"Who is the Father of Our Country?",a:"George Washington",o:["Thomas Jefferson","Benjamin Franklin","George Washington","Abraham Lincoln"]},
+{id:70,cat:"Colonial Period & Independence",q:"Who was the first President?",a:"George Washington",o:["John Adams","Thomas Jefferson","George Washington","Benjamin Franklin"]},
+{id:71,cat:"1800s History",q:"What territory did the United States buy from France in 1803?",a:"The Louisiana Territory / Louisiana",o:["The Florida Territory","Texas","The Louisiana Territory","The Pacific Northwest"]},
+{id:72,cat:"1800s History",q:"Name one war fought by the United States in the 1800s.",a:"War of 1812, Mexican-American War, Civil War, or Spanish-American War",o:["World War I","The Civil War / War of 1812 / Mexican-American War","The Korean War","The Vietnam War"]},
+{id:73,cat:"1800s History",q:"Name the U.S. war between the North and the South.",a:"The Civil War / The War between the States",o:["The Revolutionary War","The War of 1812","The Civil War","The Mexican-American War"]},
+{id:74,cat:"1800s History",q:"Name one problem that led to the Civil War.",a:"Slavery, economic reasons, or states rights",o:["Taxation without representation","Slavery and states rights","Border disputes with Mexico","Religious disagreements"]},
+{id:75,cat:"1800s History",q:"What was one important thing Abraham Lincoln did?",a:"Freed the slaves (Emancipation Proclamation) / Saved the Union / Led the U.S. during the Civil War",o:["Bought the Louisiana Territory","Freed the slaves and saved the Union","Wrote the Constitution","Declared independence from Britain"]},
+{id:76,cat:"1800s History",q:"What did the Emancipation Proclamation do?",a:"Freed the slaves in the Confederate states",o:["Ended the Civil War","Freed the slaves in the Confederate states","Gave women the right to vote","Established public schools"]},
+{id:77,cat:"1800s History",q:"What did Susan B. Anthony do?",a:"Fought for women's rights and civil rights",o:["Led the Underground Railroad","Wrote the Star-Spangled Banner","Fought for women's rights and civil rights","Was the first female senator"]},
+{id:78,cat:"Recent American History",q:"Name one war fought by the United States in the 1900s.",a:"World War I, World War II, Korean War, Vietnam War, or the Gulf War",o:["The Civil War","World War I or II / Korean War / Vietnam War / Gulf War","The Mexican-American War","The Spanish-American War"]},
+{id:79,cat:"Recent American History",q:"Who was President during World War I?",a:"Woodrow Wilson",o:["Theodore Roosevelt","Woodrow Wilson","Franklin Roosevelt","William Taft"]},
+{id:80,cat:"Recent American History",q:"Who was President during the Great Depression and World War II?",a:"Franklin Roosevelt",o:["Herbert Hoover","Woodrow Wilson","Franklin Roosevelt","Harry Truman"]},
+{id:81,cat:"Recent American History",q:"Who did the United States fight in World War II?",a:"Japan, Germany, and Italy",o:["Russia, China, and Japan","Germany, Japan, and Italy","France, Germany, and Austria","Spain, Japan, and Germany"]},
+{id:82,cat:"Recent American History",q:"Before he was President, Eisenhower was a general. What war was he in?",a:"World War II",o:["World War I","The Korean War","World War II","The Vietnam War"]},
+{id:83,cat:"Recent American History",q:"During the Cold War, what was the main concern of the United States?",a:"Communism",o:["Nuclear war only","Communism","Economic depression","Immigration"]},
+{id:84,cat:"Recent American History",q:"What movement​​​​​​​​​​​​​​​​
